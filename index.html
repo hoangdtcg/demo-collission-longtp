@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="Player.js"></script>
+</head>
+<body>
+<canvas id="main" width="800px" height="600px" style="background-color: chocolate"></canvas>
+<script>
+    let canvas = document.getElementById('main');
+    let player1 = new Player(100, 100, "blue");
+    let player2 = new Player(300, 100, "red");
+
+
+    function main() {
+        clearScreen();
+        player1.move();
+        // player2.autoMove();
+        player1.checkScreen(canvas)
+        player2.checkScreen(canvas)
+        if(checkCollision(player1,player2)){
+            randomPos();
+        }
+        player2.render(canvas);
+        player1.render(canvas);
+        requestAnimationFrame(main);
+    }
+
+    main();
+
+    function clearScreen() {
+        let ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function randomPos() {
+        let x = Math.floor(Math.random()*canvas.width)
+        let y = Math.floor(Math.random()*canvas.height)
+        player2.x = x;
+        player2.y = y;
+    }
+
+    function checkCollision(obj1, obj2) {
+        let left1 = obj1.x;
+        let right1 = obj1.x + obj1.width;
+        let top1 = obj1.y;
+        let bottom1 = obj1.y + obj1.height;
+
+        let left2 = obj2.x;
+        let right2 = obj2.x + obj2.width;
+        let top2 = obj2.y;
+        let bottom2 = obj2.y + obj2.height;
+
+        if(left1 > right2 || right1 < left2 || top1 > bottom2 || bottom1 < top2){
+            return false;
+        }
+        return true;
+    }
+    window.addEventListener('keydown', control);
+    function control(evt) {
+        switch (evt.key) {
+            case "d":
+                player1.direct = "right";
+                break;
+            case "a":
+                player1.direct = "left";
+                break;
+            case "w":
+                player1.direct = "top";
+                break;
+            case "s":
+                player1.direct = "bottom";
+                break;
+            default:
+                player1.direct = "idle";
+        }
+    }
+</script>
+</body>
+</html>
